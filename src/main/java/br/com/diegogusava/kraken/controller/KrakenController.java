@@ -1,6 +1,6 @@
 package br.com.diegogusava.kraken.controller;
 
-import br.com.diegogusava.kraken.model.KrakenImage;
+import br.com.diegogusava.kraken.model.KrakedImage;
 import br.com.diegogusava.kraken.model.KrakenUploadRequest;
 import br.com.diegogusava.kraken.reader.ImageMessageReader;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -75,7 +75,7 @@ public class KrakenController {
         //TODO
     }
 
-    public Optional<KrakenImage> downloadImage(String imageUrl) {
+    public Optional<KrakedImage> downloadImage(String imageUrl) {
 
         final Logger logger = Logger.getLogger(KrakenController.class.getSimpleName());
 
@@ -96,7 +96,7 @@ public class KrakenController {
                     .invoke();
 
             if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-                return Optional.of(response.readEntity(KrakenImage.class));
+                return Optional.of(response.readEntity(KrakedImage.class));
             }
 
         } catch (ClientErrorException ce) {
