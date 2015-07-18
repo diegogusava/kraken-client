@@ -1,7 +1,9 @@
 package br.com.diegogusava.kraken.controller;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 
+@ApplicationScoped
 public class KrakenControllerProducer {
 
     private static final String KRAKEN_UPLOAD_BY_IMAGE_URL = "https://api.kraken.io/v1/url";

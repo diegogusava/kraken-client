@@ -1,12 +1,14 @@
 package br.com.diegogusava.kraken.controller;
 
+import br.com.diegogusava.kraken.model.KrakenImage;
 import br.com.diegogusava.kraken.model.KrakenUploadRequest;
+import br.com.diegogusava.kraken.reader.ImageMessageReader;
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 import javax.json.JsonObject;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class KrakenController {
@@ -30,9 +33,17 @@ public class KrakenController {
 
         final Logger logger = Logger.getLogger(KrakenController.class.getSimpleName());
 
+        if (!request.imageUrl().isPresent()) {
+            throw new IllegalArgumentException("Image URL cannot be null");
+        }
+
         Client client = null;
+
         try {
-            client = ClientBuilder.newClient();
+            client = new ResteasyClientBuilder()
+                    .establishConnectionTimeout(15, TimeUnit.MINUTES)
+                    .socketTimeout(15, TimeUnit.SECONDS)
+                    .build();
             URI uri = UriBuilder.fromPath(uploadByImageUrl).build();
             WebTarget webTarget = client.target(uri);
             Response response = webTarget
@@ -50,7 +61,6 @@ public class KrakenController {
             logger.warning(ce.getMessage());
         } catch (ServerErrorException se) {
             logger.warning(se.getMessage());
-
         } finally {
             if (client != null) {
                 client.close();
@@ -63,6 +73,42 @@ public class KrakenController {
 
     public void uploadByImage(KrakenUploadRequest request) {
         //TODO
+    }
+
+    public Optional<KrakenImage> downloadImage(String imageUrl) {
+
+        final Logger logger = Logger.getLogger(KrakenController.class.getSimpleName());
+
+        Client client = null;
+
+        try {
+            client = new ResteasyClientBuilder()
+                    .register(ImageMessageReader.class)
+                    .establishConnectionTimeout(15, TimeUnit.MINUTES)
+                    .socketTimeout(15, TimeUnit.SECONDS)
+                    .build();
+            URI uri = UriBuilder.fromPath(imageUrl).build();
+            WebTarget webTarget = client.target(uri);
+            Response response = webTarget
+                    .request()
+                    .accept("image/*")
+                    .buildGet()
+                    .invoke();
+
+            if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+                return Optional.of(response.readEntity(KrakenImage.class));
+            }
+
+        } catch (ClientErrorException ce) {
+            logger.warning(ce.getMessage());
+        } catch (ServerErrorException se) {
+            logger.warning(se.getMessage());
+        } finally {
+            if (client != null) {
+                client.close();
+            }
+        }
+        return Optional.empty();
     }
 
 

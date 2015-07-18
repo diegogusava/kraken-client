@@ -23,7 +23,7 @@ public interface KrakenResize {
 
     Optional<Integer> size();
 
-    Optional<Strategy> strategy();
+    Strategy strategy();
 
     Optional<String> background();
 
@@ -46,9 +46,7 @@ public interface KrakenResize {
             builder.add("size", size().get());
         }
 
-        if (strategy().isPresent()) {
-            builder.add("strategy", strategy().get().name().toLowerCase());
-        }
+        builder.add("strategy", strategy().name().toLowerCase());
 
         return builder.build();
     }

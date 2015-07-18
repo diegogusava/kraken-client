@@ -78,6 +78,7 @@ public class KrakenControllerTest {
         KrakenUploadRequest request = ImmutableKrakenUploadRequest.builder()
                 .auth(credential)
                 .callbackUrl(CALLBACK_URL)
+                .imageUrl("")
                 .build();
 
 
