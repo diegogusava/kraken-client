@@ -1,0 +1,30 @@
+# Files #
+*.class
+*.project
+*.classpath
+*.jsfdia
+*.spdia
+*.pmd
+*jboss-ds.xml
+*nb-configuration.xml
+*jboss4-netbeans-destinations-service.xml
+*nbactions.xml
+*.idea
+*.iml
+*.tern-project
+.factorypath
+.externalToolBuilders/*
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Folders #
+target/
+.settings/
+classes/
+.idea/
+/.apt_generated
+/target/
+/bin
