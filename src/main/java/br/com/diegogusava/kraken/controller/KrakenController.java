@@ -41,7 +41,7 @@ public class KrakenController {
 
         try {
             client = new ResteasyClientBuilder()
-                    .establishConnectionTimeout(15, TimeUnit.MINUTES)
+                    .establishConnectionTimeout(15, TimeUnit.SECONDS)
                     .socketTimeout(15, TimeUnit.SECONDS)
                     .build();
             URI uri = UriBuilder.fromPath(uploadByImageUrl).build();
@@ -84,7 +84,7 @@ public class KrakenController {
         try {
             client = new ResteasyClientBuilder()
                     .register(ImageMessageReader.class)
-                    .establishConnectionTimeout(15, TimeUnit.MINUTES)
+                    .establishConnectionTimeout(15, TimeUnit.SECONDS)
                     .socketTimeout(15, TimeUnit.SECONDS)
                     .build();
             URI uri = UriBuilder.fromPath(imageUrl).build();
